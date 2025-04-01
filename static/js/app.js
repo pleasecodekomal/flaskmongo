@@ -1,12 +1,13 @@
-window.onload = function() {
-    fetch('/employees')  // Fetch employees from the backend
-        .then(response => response.json())
-        .then(data => {
-            const employeeList = document.getElementById('employee-list');
-            data.forEach(employee => {
-                const div = document.createElement('div');
-                div.textContent = `${employee.name} - ${employee.position}`;
-                employeeList.appendChild(div);
-            });
-        });
-};
+document.getElementById("loadData").addEventListener("click", async () => {
+    const response = await fetch("/api/employees");  // Adjust endpoint as per your backend
+    const data = await response.json();
+    
+    let container = document.getElementById("dataContainer");
+    container.innerHTML = "<h2>Employee List</h2>";
+
+    data.forEach(emp => {
+        let div = document.createElement("div");
+        div.innerHTML = `<strong>${emp.name}</strong> - ${emp.position}`;
+        container.appendChild(div);
+    });
+});

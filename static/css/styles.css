@@ -1,13 +1,22 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+    text-align: center;
 }
 
-h1 {
-    text-align: center;
-    padding: 20px;
-    background-color: #4CAF50;
+header {
+    background: #333;
     color: white;
+    padding: 1rem;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#dataContainer {
+    margin-top: 20px;
 }
