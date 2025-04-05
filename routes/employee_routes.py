@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from bson.objectid import ObjectId
 from models.employee import collection, format_employee
 
 employee_bp = Blueprint("employee", __name__)
@@ -26,24 +27,24 @@ def add_employees():
         collection.insert_one(data)
     return jsonify({"message": "Employee details inserted"}), 201
 
-# PUT - Update Employee
-@employee_bp.route("/", methods=["PUT"])
-def update_employee():
-    empid = request.json.get("empid")
-    if empid:
-        result = collection.update_one({"empid": int(empid)}, {"$set": request.json})
+# PUT - Update Employee by _id
+@employee_bp.route("/<id>", methods=["PUT"])
+def update_employee(id):
+    try:
+        result = collection.update_one({"_id": ObjectId(id)}, {"$set": request.json})
         if result.matched_count:
             return jsonify({"message": "Employee details updated"}), 200
         return jsonify({"error": "No employee found"}), 404
-    return jsonify({"error": "Provide an empid to update the details"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
-# DELETE - Remove Employee
-@employee_bp.route("/", methods=["DELETE"])
-def delete_employee():
-    empid = request.json.get("empid")
-    if empid:
-        result = collection.delete_one({"empid": int(empid)})
+# DELETE - Remove Employee by _id
+@employee_bp.route("/<id>", methods=["DELETE"])
+def delete_employee(id):
+    try:
+        result = collection.delete_one({"_id": ObjectId(id)})
         if result.deleted_count:
             return jsonify({"message": "Employee deleted"}), 200
         return jsonify({"error": "No employee found"}), 404
-    return jsonify({"error": "Provide an empid to delete the employee"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

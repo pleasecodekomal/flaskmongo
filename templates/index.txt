@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Management</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    input, button, textarea { margin: 5px 0; padding: 6px; width: 100%; }
+    .container { max-width: 600px; margin: auto; }
+    .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Employee Management System</h2>
+
+    <!-- Add Employee -->
+    <div class="section">
+      <h3>Add Employee</h3>
+      <input type="text" id="name" placeholder="Name" />
+      <input type="text" id="email" placeholder="Email" />
+      <input type="text" id="role" placeholder="Role" />
+      <button onclick="addEmployee()">Add Employee</button>
+    </div>
+
+    <!-- Get All Employees -->
+    <div class="section">
+      <h3>All Employees</h3>
+      <button onclick="getEmployees()">Load Employees</button>
+      <pre id="employeeList"></pre>
+    </div>
+
+    <!-- Preprocess -->
+    <div class="section">
+      <h3>Preprocess Employee Data</h3>
+      <textarea id="rawData" rows="4" placeholder='[{"name": "John", "email": "john@example.com"}]'></textarea>
+      <button onclick="preprocess()">Preprocess</button>
+      <pre id="preprocessedData"></pre>
+    </div>
+
+    <!-- Analyze -->
+    <div class="section">
+      <h3>Analyze Employee Data</h3>
+      <button onclick="analyze()">Analyze</button>
+      <pre id="analysisResult"></pre>
+    </div>
+
+    <!-- Auth (Example Login) -->
+    <div class="section">
+      <h3>Login</h3>
+      <input type="text" id="loginEmail" placeholder="Email" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <pre id="authStatus"></pre>
+    </div>
+  </div>
+
+  <script>
+    async function addEmployee() {
+      const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        role: document.getElementById("role").value,
+      };
+      const res = await fetch("/api/employee", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      alert("Employee added!");
+    }
+
+    async function getEmployees() {
+      const res = await fetch("/api/employee");
+      const data = await res.json();
+      document.getElementById("employeeList").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function preprocess() {
+      const raw = JSON.parse(document.getElementById("rawData").value);
+      const res = await fetch("/api/employee/preprocess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(raw),
+      });
+      const data = await res.json();
+      document.getElementById("preprocessedData").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function analyze() {
+      const res = await fetch("/api/employee/analyze");
+      const data = await res.json();
+      document.getElementById("analysisResult").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function login() {
+      const credentials = {
+        email: document.getElementById("loginEmail").value,
+        password: document.getElementById("loginPassword").value,
+      };
+      const res = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
+      const data = await res.json();
+      document.getElementById("authStatus").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>

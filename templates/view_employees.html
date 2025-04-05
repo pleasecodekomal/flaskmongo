@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Employee List</title>
+  <style>
+    #editModal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+    #modalContent {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #333;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 6px 12px;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Employee List</h2>
+  <table border="1" id="employeeTable">
+    <thead>
+      <tr>
+        <th>Name</th><th>Email</th><th>Gender</th><th>Age</th><th>Role</th>
+        <th>Qualification</th><th>Address</th><th>DOB</th><th>Salary</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Modal for Editing -->
+  <div id="editModal">
+    <div id="modalContent">
+      <h3>Edit Employee</h3>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <input type="text" id="editName" placeholder="Name" required>
+        <input type="email" id="editEmail" placeholder="Email" required>
+        <input type="text" id="editGender" placeholder="Gender">
+        <input type="number" id="editAge" placeholder="Age">
+        <input type="text" id="editRole" placeholder="Role">
+        <input type="text" id="editQualification" placeholder="Qualification">
+        <input type="text" id="editAddress" placeholder="Address">
+        <input type="date" id="editDob" placeholder="DOB">
+        <input type="number" id="editSalary" placeholder="Salary">
+        <button type="submit">Save</button>
+        <button type="button" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    async function loadEmployees() {
+      const res = await fetch("/api/employee");
+      const data = await res.json();
+      const tbody = document.querySelector("#employeeTable tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(emp => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${emp.name}</td>
+          <td>${emp.email}</td>
+          <td>${emp.gender || ''}</td>
+          <td>${emp.age || ''}</td>
+          <td>${emp.role || ''}</td>
+          <td>${emp.qualification || ''}</td>
+          <td>${emp.address || ''}</td>
+          <td>${emp.dob ? emp.dob.split('T')[0] : ''}</td>
+          <td>${emp.salary || ''}</td>
+          <td>
+            <button onclick='openEditModal(${JSON.stringify(emp)})'>Update</button>
+            <button onclick="deleteEmployee('${emp._id}')">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function openEditModal(emp) {
+      document.getElementById("editId").value = emp._id;
+      document.getElementById("editName").value = emp.name;
+      document.getElementById("editEmail").value = emp.email;
+      document.getElementById("editGender").value = emp.gender || '';
+      document.getElementById("editAge").value = emp.age || '';
+      document.getElementById("editRole").value = emp.role || '';
+      document.getElementById("editQualification").value = emp.qualification || '';
+      document.getElementById("editAddress").value = emp.address || '';
+      document.getElementById("editDob").value = emp.dob ? emp.dob.split('T')[0] : '';
+      document.getElementById("editSalary").value = emp.salary || '';
+      document.getElementById("editModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("editModal").style.display = "none";
+    }
+
+    document.getElementById("editForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const id = document.getElementById("editId").value;
+      const data = {
+        name: document.getElementById("editName").value,
+        email: document.getElementById("editEmail").value,
+        gender: document.getElementById("editGender").value,
+        age: parseInt(document.getElementById("editAge").value),
+        role: document.getElementById("editRole").value,
+        qualification: document.getElementById("editQualification").value,
+        address: document.getElementById("editAddress").value,
+        dob: document.getElementById("editDob").value,
+        salary: parseFloat(document.getElementById("editSalary").value)
+      };
+
+      const res = await fetch(`/api/employee/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        alert("Employee updated successfully!");
+        closeModal();
+        loadEmployees();
+      } else {
+        alert("Error updating employee.");
+      }
+    });
+
+    async function deleteEmployee(id) {
+      const res = await fetch(`/api/employee/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        alert("Employee deleted successfully!");
+        loadEmployees();
+      } else {
+        alert("Error deleting employee.");
+      }
+    }
+
+    loadEmployees();
+  </script>
+</body>
+</html>
