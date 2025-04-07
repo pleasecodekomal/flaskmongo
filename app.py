@@ -6,8 +6,10 @@ from data_preprocessing.interpretation import analyze_employee_data
 from data_preprocessing.preprocessing import clean_employee_data
 import pandas as pd
 
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Required for session management
+
 
 # ========== Database ==========
 client = MongoClient('mongodb://localhost:27017/')

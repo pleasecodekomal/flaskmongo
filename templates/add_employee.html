@@ -3,24 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <title>Add Employee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: #f4f6f8;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #1f2937;
+      margin-top: 15px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+  </style>
 </head>
 <body>
-  <h2>Add New Employee</h2>
-  <form id="employeeForm">
-    <input type="text" name="name" placeholder="Name" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="text" name="gender" placeholder="Gender" />
-    <input type="number" name="age" placeholder="Age" />
-    <input type="text" name="role" placeholder="Role" />
-    <input type="text" name="qualification" placeholder="Qualification" />
-    <input type="text" name="address" placeholder="Address" />
-    <input type="date" name="dob" placeholder="Date of Birth" />
-    <input type="number" name="salary" placeholder="Current Salary" />
-    <button type="submit">Add Employee</button>
-  </form>
+  <div class="container">
+    <h2>Add New Employee</h2>
+    <form id="employeeForm">
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="text" name="gender" placeholder="Gender" />
+      <input type="number" name="age" placeholder="Age" />
+      <input type="text" name="role" placeholder="Role" />
+      <input type="text" name="qualification" placeholder="Qualification" />
+      <input type="text" name="address" placeholder="Address" />
+      <input type="date" name="dob" placeholder="Date of Birth" />
+      <input type="number" name="salary" placeholder="Current Salary" />
+      <button type="submit">Add Employee</button>
+    </form>
 
-  <br>
-  <button onclick="location.href='/view-employees'">View Employee List</button>
+    <button class="btn-secondary" onclick="location.href='/view-employees'">View Employee List</button>
+  </div>
 
   <script>
     document.getElementById("employeeForm").onsubmit = async (e) => {
